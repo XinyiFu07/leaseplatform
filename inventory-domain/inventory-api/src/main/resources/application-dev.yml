@@ -1,0 +1,66 @@
+server:
+  port: 13003
+
+spring:
+  application:
+    name: inventory-api
+  datasource:
+    url: jdbc:mysql://localhost:3306/d_inventory
+    username: root
+    password: fxyliu
+    hikari:
+      connection-timeout: 15000
+    kafka:
+      bootstrap-servers: 10.0.0.8:9092
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  type-aliases-package: com.lease.order.api.domain
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
+      select-strategy: not_empty
+      insert-strategy: not_empty
+      update-strategy: not_empty
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+
+feign:
+  compression:
+    ##开启压缩 装配于org.springframework.cloud.openfeign.encoding.FeignClientEncodingProperties
+    request:
+      enabled: true
+      min-request-size: 4096
+      mime-types: text/xml,application/xml,application/json
+    response:
+      enabled: true
+  ##启用okhttp 装配于org.springframework.cloud.openfeign.FeignClientsConfiguration
+  okhttp:
+    enabled: true
+  ##配置http client连接池,装配于org.springframework.cloud.openfeign.support.FeignHttpClientProperties
+  httpclient:
+    ##连接超时
+    connectionTimeout: 3000
+    ##连接重试
+    connectionTimerRepeat: 5000
+    ##最大连接数
+    maxConnections: 200
+    ##接受302重定向
+    followRedirects: true
+    ##启用https安全,默认关闭ssl域名验证
+    disableSslValidation: true
+    ##连接生存时间
+    timeToLive: 900
+    ##连接生存时间单位
+    timeToLiveUnit: SECONDS
+  client:
+    config:
+      ##client默认配置，装配于org.springframework.cloud.openfeign.FeignClientProperties
+      default:
+        connectTimeout: 3000
+        readTimeout: 60000
+        ## 开启feign日志
+        loggerLevel: full
